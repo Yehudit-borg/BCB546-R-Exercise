@@ -1,6 +1,6 @@
 ---
 title: "My first file"
-author: "Onyinyechi"
+author: "Yehudit"
 date: "`r Sys.Date()`"
 output: pdf_document
 ---
