@@ -1,0 +1,65 @@
+---
+title: "Shirin_review"
+author: "Shirin Parvin"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+
+Hi Onyinyechi,
+
+Great job attempting the assignment! Your data manipultions were very clean, and you had some beautiful plots!
+a
+I noticed that for most part of that assignment, whenever you created a dataframe, you always used`View()`. You do not need to use `View()`.When executing the .Rmd file, the dataframes are already generated and clicking on the dataframe under the 'Environments" tab, easily shows the details of the dataframe. Having `View()` in the code too many times, makes the Console output too busy and we cannot track teh information easily. 
+
+Here are some of my other suggestions, which may help you improve your assignment.
+
+
+### Data Inspection
+
+1. Here, I think, just using `dim()` and `str()` is enough. Also, it might be good idea to break the big chunk into smaller chunks so that, you can easily see the details of the output. Since it is a big block of code, there is too much information displayed all at once and might be difficult to navigate. It is a minor thing.
+
+
+### Data Processing
+
+2. I really liked the simple way in which you cleaned and manipulated the dataframes before merging them. Very clean and straightforward way. I learnt a lot from this part! Simplicity is best!
+
+
+3. Instead of manually extracting the columns by using column numbers to extract either Maize or Teosinte data,(as shown below) it might be better to use `select()`. 
+
+```{r}
+merged_extract <- merged_data[, c(1, 3, 4, 2508:2797, 1225:2480, 2481:2507)
+```
+
+4. In the following line of code, if you had directly used `as.numeric()` in place of `as.double()`, you could have saved one or two lines of code in the function you defined right after this, where you used `as.numeric()` anyways.
+
+```{r}
+Maize_increase_numeric_positions <- merged_extract[order(as.double(merged_extract$Position)), ]  #as.numeric() might be better
+```
+
+
+5. For extracting chromosome-wise data, instead of doing one by one, perhaps using `lapply()` using the function `extract_and_sort()` you had already defined, might have made the code tighter.
+
+6. Again, for writing the files, using `lapply()` might have been better than using as `for` loop, as also mentioned in the assignment hints. You could have essentially, added the `write.csv()` code line in the function `extract_and_sort()`, and saved two rounds of `for loop` to create an overall faster code.
+
+
+### Data Visualization
+
+7. Converting the Chromsome column using `as.numeric()` should help with the plots showing the chromsome numbers in correct order, ie., Chromosome 1 in the plot will be followed by 2, and not 10.
+
+8. For creating **"# Plot SNP counts per chromosome for Maize and Teosinte"**, I think, as mentioned in the hint, using `pivot_longer()` might have been useful. The plot just seems a little worng to be (I could very well be wrong!!) since you got that for both Maize and Teosinte, the number of SNPs were the same. I think, if you used `pivot_longer()` and used then grouped by Chromosome and counted the "non-missing" values of the SNP genotypes i.e, excluded the NAs after converting the column to `as.character()`, you might have seen a distinct difference between the maize and teosinte SNPs.
+
+9. I loved your `geom_point()` based plot for **#Scatter plot of SNPs distribution across chromosomes** !!
+
+10. For creating the Homozygous, Heterozygous plot per sample, I think you could have gotten the proportion as soon as you had the summary count, ie. stopped at the following part and then skipped straight ahead to the plotting part using the "position = fill" parameters, rather than again converting back using `pivot_wider()`.
+
+```{r}
+# Summarize proportions per Sample_ID
+summary_table <- fang_long %>%
+  group_by(Sample_ID, Genotype_Type) %>%
+  summarise(Count = n(), .groups = "drop") %>%
+
+```
+
+
+11. Your own visualization was interesting! Great job!
